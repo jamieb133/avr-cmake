@@ -25,3 +25,21 @@ target_include_directories(avrcore PRIVATE ${AVRCORE_DIR}/cores/arduino
 											${AVRCORE_DIR}/variants/standard
 											${AVRCORE_DIR}/libraries/SoftwareSerial/src
                                             ${AVRSTL_DIR}/src)
+
+function(add_avr_core target)
+	target_link_libraries(${target} PRIVATE avrcore)
+	target_include_directories(${target} PRIVATE ${AVRCORE_DIR}/cores/arduino
+													${AVRCORE_DIR}/variants/standard
+													${AVRCORE_DIR}/libraries/SoftwareSerial/src)
+endfunction()
+
+function(avr_post_build target)
+	# Convert .elf to .hex.
+    add_custom_command(
+        TARGET ${target}
+        POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} 
+		ARGS -O ihex ${target} ${target}.hex
+    )
+
+endfunction()

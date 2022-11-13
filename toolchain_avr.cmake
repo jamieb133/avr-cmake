@@ -14,6 +14,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 SET(CMAKE_CXX_COMPILER ${TOOLCHAIN_ROOT}/bin/avr-g++)
 SET(CMAKE_C_COMPILER ${TOOLCHAIN_ROOT}/bin/avr-gcc)
 SET(CMAKE_ASM_COMPILER ${TOOLCHAIN_ROOT}/bin/avr-gcc)
+SET(CMAKE_LINKER ${TOOLCHAIN_ROOT}/bin/avr-gcc)
+SET(CMAKE_OBJCOPY ${TOOLCHAIN_ROOT}/bin/avr-objcopy)
 
 SET(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${AVRSTL_DIR}/src)
 
@@ -29,6 +31,7 @@ SET(BOARD_DEFS "-mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10607 -DARDUINO_AVR
 SET(CMAKE_CXX_FLAGS "-Os -Wno-error=narrowing -ffunction-sections -fdata-sections -fno-exceptions -fno-threadsafe-statics ${BOARD_DEFS} --sysroot ${TOOLCHAIN_ROOT}" CACHE INTERNAL "" FORCE)
 SET(CMAKE_C_FLAGS "-Os -w -std=gnu11 -ffunction-sections -fdata-sections ${BOARD_DEFS}" CACHE INTERNAL "" FORCE)
 SET(CMAKE_ASM_FLAGS "--x assembler-with-cpp" CACHE INTERNAL "" FORCE)
-SET(LDFLAGS "-w -Os -fuse-linker-plugin -Wl,--gc-sections")
-SET(EEP_FLAGS "-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0")
-SET(ELF2HEX_FLAGS "-O ihex -R .eeprom")
+SET(CMAKE_EXE_LINKER_FLAGS "-w -Os -fuse-linker-plugin -Wl,--gc-sections" CACHE INTERNAL "" FORCE)
+SET(EEP_FLAGS "-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0" CACHE INTERNAL "" FORCE)
+SET(ELF2HEX_FLAGS "-O ihex -R .eeprom" CACHE INTERNAL "" FORCE)
+

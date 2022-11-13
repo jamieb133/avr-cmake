@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 IF(NOT DEFINED AVRSTL_DIR)
-message(STATUS "Error! AVRCORE_DIR not defined")
+message(STATUS "Error! AVRSTL_DIR not defined")
 endif()
 
 # Sources.
@@ -20,3 +20,8 @@ target_include_directories(avrstl PRIVATE ${AVRCORE_DIR}/cores/arduino
 											${AVRCORE_DIR}/variants/standard
 											${AVRCORE_DIR}/libraries/SoftwareSerial/src
                                             ${AVRSTL_DIR}/src)
+
+function(add_avr_stl target)
+	target_link_libraries(${target} PRIVATE avrstl)
+	target_include_directories(${target} PRIVATE ${AVRSTL_DIR}/src)
+endfunction()
