@@ -22,6 +22,6 @@ target_include_directories(avrstl PRIVATE ${AVRCORE_DIR}/cores/arduino
                                             ${AVRSTL_DIR}/src)
 
 function(add_avr_stl target)
-	target_link_libraries(${target} PRIVATE avrstl)
-	target_include_directories(${target} PRIVATE ${AVRSTL_DIR}/src)
+	target_link_libraries(${target} PUBLIC avrstl)
+	target_include_directories(${target} PUBLIC ${AVRSTL_DIR}/src)
 endfunction()

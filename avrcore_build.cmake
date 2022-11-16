@@ -7,15 +7,37 @@ message(STATUS "Error! AVRCORE_DIR not defined")
 endif()
 
 # Sources.
-file(GLOB asm_sources ${AVRCORE_DIR}/cores/arduino/*S)
-file(GLOB c_sources ${AVRCORE_DIR}/cores/arduino/*c)
-file(GLOB cpp_sources ${AVRCORE_DIR}/cores/arduino/*cpp)
-SET(cpp_sources ${cpp_sources}
-					${AVRCORE_DIR}/libraries/SoftwareSerial/src/SoftwareSerial.cpp)
+set(ARDUINO_CORE_PATH ${AVRCORE_DIR}/cores/arduino)
+set(sources
+	${sources}
+	${ARDUINO_CORE_PATH}/abi.cpp
+	${ARDUINO_CORE_PATH}/CDC.cpp
+	${ARDUINO_CORE_PATH}/HardwareSerial0.cpp
+	${ARDUINO_CORE_PATH}/HardwareSerial1.cpp
+	${ARDUINO_CORE_PATH}/HardwareSerial2.cpp
+	${ARDUINO_CORE_PATH}/HardwareSerial3.cpp
+	${ARDUINO_CORE_PATH}/HardwareSerial.cpp
+	${ARDUINO_CORE_PATH}/IPAddress.cpp
+	${ARDUINO_CORE_PATH}/new.cpp
+	${ARDUINO_CORE_PATH}/PluggableUSB.cpp
+	${ARDUINO_CORE_PATH}/Print.cpp
+	${ARDUINO_CORE_PATH}/Stream.cpp
+	${ARDUINO_CORE_PATH}/Tone.cpp
+	${ARDUINO_CORE_PATH}/USBCore.cpp
+	${ARDUINO_CORE_PATH}/WMath.cpp
+	${ARDUINO_CORE_PATH}/WString.cpp
+	${ARDUINO_CORE_PATH}/hooks.c
+	${ARDUINO_CORE_PATH}/WInterrupts.c
+	${ARDUINO_CORE_PATH}/wiring_analog.c
+	${ARDUINO_CORE_PATH}/wiring.c
+	${ARDUINO_CORE_PATH}/wiring_digital.c
+	${ARDUINO_CORE_PATH}/wiring_pulse.c
+	${ARDUINO_CORE_PATH}/wiring_shift.c
+	${ARDUINO_CORE_PATH}/wiring_pulse.S
+	${AVRCORE_DIR}/libraries/SoftwareSerial/src/SoftwareSerial.cpp
+)
 
-add_library(avrcore ${cpp_sources}
-						${c_sources}
-						${asm_sources})
+add_library(avrcore ${sources})
 
 get_filename_component(AVRCORE_DIR "${AVRCORE_DIR}" ABSOLUTE CACHE INTERNAL "")
 set(AVRCORE_INCLUDES "${AVRCORE_DIR}/cores/arduino ${AVRCORE_DIR}/variants/standard ${AVRCORE_DIR}/libraries/SoftwareSerial/src"
@@ -26,20 +48,3 @@ target_include_directories(avrcore PRIVATE ${AVRCORE_DIR}/cores/arduino
 											${AVRCORE_DIR}/libraries/SoftwareSerial/src
                                             ${AVRSTL_DIR}/src)
 
-function(add_avr_core target)
-	target_link_libraries(${target} PRIVATE avrcore)
-	target_include_directories(${target} PRIVATE ${AVRCORE_DIR}/cores/arduino
-													${AVRCORE_DIR}/variants/standard
-													${AVRCORE_DIR}/libraries/SoftwareSerial/src)
-endfunction()
-
-function(avr_post_build target)
-	# Convert .elf to .hex.
-    add_custom_command(
-        TARGET ${target}
-        POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} 
-		ARGS -O ihex ${target} ${target}.hex
-    )
-
-endfunction()
