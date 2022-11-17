@@ -53,7 +53,7 @@ function(avr_post_build target)
 	add_custom_command(
         TARGET ${target}
         POST_BUILD
-        COMMAND ${TOOLCHAIN_ROOT}/bin/avr-size
+        COMMAND ${AVR_ROOT}/${TOOLCHAIN_ROOT}/bin/avr-size
 		ARGS -A "$<TARGET_FILE:${target}>"
 		USES_TERMINAL
     )
@@ -75,5 +75,13 @@ function(avr_post_build target)
 		BYPRODUCTS ${target}.hex
         COMMAND ${CMAKE_OBJCOPY} 
 		ARGS -O ihex -R .eeptom "$<TARGET_FILE:${target}>" ${target}.hex
+    )
+
+    add_custom_command(
+        TARGET ${target}
+        POST_BUILD
+        COMMAND ${AVR_ROOT}/${TOOLCHAIN_ROOT}/bin/avr-size
+		ARGS -A ${target}.hex
+		USES_TERMINAL
     )
 endfunction()
